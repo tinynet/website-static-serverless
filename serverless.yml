@@ -1,0 +1,62 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: website-static
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  profile: alberto # aws profile configured in CLI
+
+plugins:
+  - serverless-s3-sync
+
+custom:
+  bucketName: website-static-pages-59e76365  
+  s3Sync:
+    - bucketName: ${self:custom.bucketName}
+      localDir: ./pages
+      params:
+        - index.html:
+            CacheControl:  'no-cache'   
+
+resources:
+  Resources:
+    WebsiteStatic:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.bucketName}
+        WebsiteConfiguration:
+          IndexDocument: index.html  
+
+    WebsiteStaticS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: WebsiteStatic
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+              - s3:GetObject
+              Resource:
+                Fn::Join: [
+                  "", [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "WebsiteStatic"
+                    },
+                    "/*"
+                  ]
+                ]
+  Outputs:
+    WebsiteURL:
+      Value: !GetAtt [WebsiteStatic, WebsiteURL]
+      Description: URL for website hosted on S3                
