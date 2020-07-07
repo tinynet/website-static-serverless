@@ -2,11 +2,17 @@
 
 ## Instructions
 
-* Create from basic template, language not important: sls create -t hello-world -n website-static -p website-static
+* Create from basic template, language not important: 
+
+    * sls create -t hello-world -n website-static -p website-static
+
 * Install s3 sync plugin: 
-(https://www.serverless.com/plugins/serverless-s3-sync)
-sls plugin install -n serverless-s3-sync
--> added to serverless.yaml
+
+   * (https://www.serverless.com/plugins/serverless-s3-sync)
+   
+   * sls plugin install -n serverless-s3-sync
+   
+   * -> added to serverless.yaml
 * remove handler.js, and function sections from serverless.yaml, we don't need functions
 * node_modules are ignored
 * create pages directory and pages/index.html
