@@ -1,4 +1,4 @@
-# Serverless project for hosting a static website
+# Simple static web site with serverless
 
 ## Instructions
 
